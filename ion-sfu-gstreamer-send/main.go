@@ -2,7 +2,9 @@ package main
 
 import (
 	"flag"
-	gst "github.com/pion/ion-sdk-go/pkg/gstreamer-src"
+	"fmt"
+
+	gst "github.com/nikunjy/ion-go-examples/pkg/gstreamer-src"
 
 	ilog "github.com/pion/ion-log"
 	sdk "github.com/pion/ion-sdk-go"
@@ -16,11 +18,18 @@ var (
 func main() {
 	// parse flag
 	var session, addr string
+	var codec string
 	flag.StringVar(&addr, "addr", "localhost:50051", "Ion-sfu grpc addr")
 	flag.StringVar(&session, "session", "test room", "join session name")
+	flag.StringVar(&codec, "codec", "vp8", "codec name")
+
 	audioSrc := flag.String("audio-src", "audiotestsrc", "GStreamer audio src")
 	videoSrc := flag.String("video-src", "videotestsrc", "GStreamer video src")
 	flag.Parse()
+
+	if codec != "vp8" || codec != "h264" {
+		log.Fatal("No valid codec provided")
+	}
 
 	// add stun servers
 	webrtcCfg := webrtc.Configuration{
@@ -58,6 +67,7 @@ func main() {
 		return
 	}
 
+	mimeName := fmt.Sprintf("video/%s", codec)
 	videoTrack, err := webrtc.NewTrackLocalStaticSample(webrtc.RTPCodecCapability{MimeType: "video/vp8"}, "video", "pion2")
 	if err != nil {
 		panic(err)
@@ -87,7 +97,7 @@ func main() {
 
 	// Start pushing buffers on these tracks
 	gst.CreatePipeline("opus", []*webrtc.TrackLocalStaticSample{audioTrack}, *audioSrc).Start()
-	gst.CreatePipeline("vp8", []*webrtc.TrackLocalStaticSample{videoTrack}, *videoSrc).Start()
+	gst.CreatePipeline(codec, []*webrtc.TrackLocalStaticSample{videoTrack}, *videoSrc).Start()
 
 	select {}
 }
