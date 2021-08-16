@@ -27,7 +27,7 @@ func main() {
 	videoSrc := flag.String("video-src", "videotestsrc", "GStreamer video src")
 	flag.Parse()
 
-	if codec != "vp8" || codec != "h264" {
+	if codec != "vp8" && codec != "h264" {
 		log.Fatal("No valid codec provided")
 	}
 
@@ -67,8 +67,8 @@ func main() {
 		return
 	}
 
-	mimeName := fmt.Sprintf("video/%s", codec)
-	videoTrack, err := webrtc.NewTrackLocalStaticSample(webrtc.RTPCodecCapability{MimeType: "video/vp8"}, "video", "pion2")
+	mimeType := fmt.Sprintf("video/%s", codec)
+	videoTrack, err := webrtc.NewTrackLocalStaticSample(webrtc.RTPCodecCapability{MimeType: mimeType}, "video", "pion2")
 	if err != nil {
 		panic(err)
 	}
