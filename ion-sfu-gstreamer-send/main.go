@@ -6,10 +6,10 @@ import (
 
 	gst "github.com/nikunjy/ion-go-examples/pkg/gstreamer-src"
 
+	"github.com/pion/interceptor"
 	ilog "github.com/pion/ion-log"
 	sdk "github.com/pion/ion-sdk-go"
 	"github.com/pion/webrtc/v3"
-//        "github.com/nikunjy/webrtc"
 )
 
 var (
@@ -29,7 +29,7 @@ func main() {
 	videoSrc := flag.String("video-src", "videotestsrc", "GStreamer video src")
 	flag.Parse()
 
-	if codec != "vp8" && codec != "h264"  {
+	if codec != "vp8" && codec != "h264" {
 		log.Fatal("No valid codec provided")
 	}
 
@@ -47,14 +47,8 @@ func main() {
 			Configuration: webrtcCfg,
 		},
 	}
-	// new sdk engine
-	e := sdk.NewEngine(config)
-       // e.RegisterCodec(webrtc.RTPCodecParameters{
-   //RTPCodecCapability: webrtc.RTPCodecCapability{MimeType: H264, ClockRate: 90000, Channels: 0, SDPFmtpLine: "packetization-mode=1;profile-level-id=42e01f", RTCPFeedback: nil},
-   //PayloadType:        webRTC.PayloadType(107),
-//}, webrtc.RTPCodecTypeVideo); 
- 
-        // Create a MediaEngine object to configure the supported codec
+
+	// Create a MediaEngine object to configure the supported codec
 	m := &webrtc.MediaEngine{}
 
 	// Setup the codecs you want to use.
@@ -66,6 +60,13 @@ func main() {
 		panic(err)
 	}
 
+	i := &interceptor.Registry{}
+	if err := webrtc.RegisterDefaultInterceptors(m, i); err != nil {
+		panic(err)
+	}
+
+	// new sdk engine
+	e := sdk.NewEngine(config)
 	// get a client from engine
 	c, err := sdk.NewClient(e, addr, "gstreamer")
 
