@@ -6,6 +6,7 @@ import (
 
 	gst "github.com/nikunjy/ion-go-examples/pkg/gstreamer-src"
 
+	"github.com/pion/interceptor"
 	ilog "github.com/pion/ion-log"
 	sdk "github.com/pion/ion-sdk-go"
 	"github.com/pion/webrtc/v3"
@@ -18,6 +19,7 @@ var (
 func main() {
 	// parse flag
 	var session, addr string
+
 	var codec string
 	flag.StringVar(&addr, "addr", "localhost:50051", "Ion-sfu grpc addr")
 	flag.StringVar(&session, "session", "test room", "join session name")
@@ -45,9 +47,26 @@ func main() {
 			Configuration: webrtcCfg,
 		},
 	}
+
+	// Create a MediaEngine object to configure the supported codec
+	m := &webrtc.MediaEngine{}
+
+	// Setup the codecs you want to use.
+	// We'll use a VP8 and Opus but you can also define your own
+	if err := m.RegisterCodec(webrtc.RTPCodecParameters{
+		RTPCodecCapability: webrtc.RTPCodecCapability{MimeType: webrtc.MimeTypeH264, ClockRate: 90000, Channels: 0, SDPFmtpLine: "packetization-mode=1;profile-level-id=42e01f", RTCPFeedback: nil},
+		PayloadType:        126,
+	}, webrtc.RTPCodecTypeVideo); err != nil {
+		panic(err)
+	}
+
+	i := &interceptor.Registry{}
+	if err := webrtc.RegisterDefaultInterceptors(m, i); err != nil {
+		panic(err)
+	}
+
 	// new sdk engine
 	e := sdk.NewEngine(config)
-
 	// get a client from engine
 	c, err := sdk.NewClient(e, addr, "gstreamer")
 
@@ -68,7 +87,7 @@ func main() {
 	}
 
 	mimeType := fmt.Sprintf("video/%s", codec)
-	videoTrack, err := webrtc.NewTrackLocalStaticSample(webrtc.RTPCodecCapability{MimeType: mimeType}, "video", "pion2")
+	videoTrack, err := webrtc.NewTrackLocalStaticSample(webrtc.RTPCodecCapability{MimeType: mimeType, ClockRate: 90000, Channels: 0, SDPFmtpLine: "packetization-mode=1;profile-level-id=42e01f", RTCPFeedback: nil}, "video", "pion2")
 	if err != nil {
 		panic(err)
 	}

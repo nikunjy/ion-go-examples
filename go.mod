@@ -10,6 +10,7 @@ require (
 	github.com/lucsky/cuid v1.0.2
 	github.com/petar/GoLLRB v0.0.0-20190514000832-33fb24c13b99 // indirect
 	github.com/pion/ice/v2 v2.1.7
+	github.com/pion/interceptor v0.0.12 // indirect
 	github.com/pion/ion-avp v1.8.4
 	github.com/pion/ion-log v1.2.0
 	github.com/pion/ion-sdk-go v0.6.0
