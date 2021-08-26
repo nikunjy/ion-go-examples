@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
+	sdk "github.com/nikunjy/ion-sdk"
+	gst "github.com/nikunjy/ion-sdk/pkg/gstreamer-sink"
 	ilog "github.com/pion/ion-log"
-	sdk "github.com/pion/ion-sdk-go"
-	gst "github.com/pion/ion-sdk-go/pkg/gstreamer-sink"
 	"github.com/pion/rtcp"
 	"github.com/pion/webrtc/v3"
 )
@@ -55,7 +55,7 @@ func runClientLoop(addr, session string) {
 	c.OnTrack = func(track *webrtc.TrackRemote, receiver *webrtc.RTPReceiver) {
 		codecName := strings.Split(track.Codec().RTPCodecCapability.MimeType, "/")[1]
 		if codecName != "opus" {
-			return 
+			return
 		}
 		fmt.Println("Received a track", *track)
 		// Send a PLI on an interval so that the publisher is pushing a keyframe every rtcpPLIInterval

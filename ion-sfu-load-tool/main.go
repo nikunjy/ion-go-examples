@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/lucsky/cuid"
+	sdk "github.com/nikunjy/ion-sdk"
 	ilog "github.com/pion/ion-log"
-	sdk "github.com/pion/ion-sdk-go"
 	"github.com/pion/webrtc/v3"
 	"github.com/sirupsen/logrus"
 )

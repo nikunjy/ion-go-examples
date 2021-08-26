@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
+	sdk "github.com/nikunjy/ion-sdk"
 	log "github.com/pion/ion-log"
-	sdk "github.com/pion/ion-sdk-go"
 	"github.com/pion/webrtc/v3"
 	"github.com/pion/webrtc/v3/pkg/media"
 	"github.com/pion/webrtc/v3/pkg/media/ivfwriter"

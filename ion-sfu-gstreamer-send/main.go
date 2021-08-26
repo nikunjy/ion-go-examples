@@ -6,9 +6,9 @@ import (
 
 	gst "github.com/nikunjy/ion-go-examples/pkg/gstreamer-src"
 
+	sdk "github.com/nikunjy/ion-sdk"
 	"github.com/pion/interceptor"
 	ilog "github.com/pion/ion-log"
-	sdk "github.com/pion/ion-sdk-go"
 	"github.com/pion/webrtc/v3"
 )
 
