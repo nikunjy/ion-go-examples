@@ -90,7 +90,7 @@ func main() {
 	}
 
 	// client join a session
-	err = c.Join(session, nil)
+	err = c.Join(session, sdk.NewJoinConfig().SetNoSubscribe())
 
 	if err != nil {
 		log.Errorf("join err=%v", err)
@@ -103,3 +103,4 @@ func main() {
 
 	select {}
 }
+

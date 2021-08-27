@@ -54,9 +54,14 @@ func CreatePipeline(codecName string, tracks []*webrtc.TrackLocalStaticSample, p
 		pipelineStr = pipelineSrc + " ! vp9enc ! " + pipelineStr
 		clockRate = videoClockRate
 
-	case "h264":
-		pipelineStr = pipelineSrc + " ! video/x-raw,format=I420 ! x264enc speed-preset=ultrafast tune=zerolatency key-int-max=20 ! video/x-h264,stream-format=byte-stream ! " + pipelineStr
-		clockRate = videoClockRate
+//	case "h264":
+//		pipelineStr = pipelineSrc + " ! video/x-raw,format=I420 ! x264enc speed-preset=ultrafast tune=zerolatency key-int-max=20 ! video/x-h264,stream-format=byte-stream ! " + pipelineStr
+//		clockRate = videoClockRate
+
+        case "h264":
+                pipelineStr = pipelineSrc + " ! video/x-raw,width=1280,height=720,framerate=30/1 ! queue ! omxh264enc target-bitrate=5000000 control-rate=1 ! video/x-h264,width=1280,height=720,framerate=30/1,profile=high ! " + pipelineStr
+                clockRate = videoClockRate
+
 
 	case "opus":
 		pipelineStr = pipelineSrc + " ! opusenc ! " + pipelineStr
