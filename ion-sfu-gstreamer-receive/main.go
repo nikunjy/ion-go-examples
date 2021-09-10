@@ -54,11 +54,11 @@ func runClientLoop(addr, session string) {
 	// comment this if you don't need save to file
 	c.OnTrack = func(track *webrtc.TrackRemote, receiver *webrtc.RTPReceiver) {
 		codecName := strings.Split(track.Codec().RTPCodecCapability.MimeType, "/")[1]
-		if codecName != "opus" {
-	         c.SubscribeAll( "none", true)
+		//if codecName != "opus" {
+	         //c.SubscribeAll( "none", true)
 
-		    return
-		}
+		   // return
+		//}
 		fmt.Println("Received a track", *track)
 		// Send a PLI on an interval so that the publisher is pushing a keyframe every rtcpPLIInterval
 		go func() {
