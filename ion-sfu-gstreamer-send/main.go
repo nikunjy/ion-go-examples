@@ -6,9 +6,8 @@ import (
 
 	gst "github.com/nikunjy/ion-go-examples/pkg/gstreamer-src"
 
-	"github.com/pion/interceptor"
+	sdk "github.com/nikunjy/ion-sdk"
 	ilog "github.com/pion/ion-log"
-	sdk "github.com/pion/ion-sdk-go"
 	"github.com/pion/webrtc/v3"
 )
 
@@ -33,6 +32,7 @@ func main() {
 		log.Fatal("No valid codec provided")
 	}
 
+	mimeType := fmt.Sprintf("video/%s", codec)
 	// add stun servers
 	webrtcCfg := webrtc.Configuration{
 		ICEServers: []webrtc.ICEServer{
@@ -45,24 +45,8 @@ func main() {
 	config := sdk.Config{
 		WebRTC: sdk.WebRTCTransportConfig{
 			Configuration: webrtcCfg,
+			VideoMime: mimeType,
 		},
-	}
-
-	// Create a MediaEngine object to configure the supported codec
-	m := &webrtc.MediaEngine{}
-
-	// Setup the codecs you want to use.
-	// We'll use a VP8 and Opus but you can also define your own
-	if err := m.RegisterCodec(webrtc.RTPCodecParameters{
-		RTPCodecCapability: webrtc.RTPCodecCapability{MimeType: webrtc.MimeTypeH264, ClockRate: 90000, Channels: 0, SDPFmtpLine: "packetization-mode=1;profile-level-id=42e01f", RTCPFeedback: nil},
-		PayloadType:        126,
-	}, webrtc.RTPCodecTypeVideo); err != nil {
-		panic(err)
-	}
-
-	i := &interceptor.Registry{}
-	if err := webrtc.RegisterDefaultInterceptors(m, i); err != nil {
-		panic(err)
 	}
 
 	// new sdk engine
@@ -86,8 +70,7 @@ func main() {
 		return
 	}
 
-	mimeType := fmt.Sprintf("video/%s", codec)
-	videoTrack, err := webrtc.NewTrackLocalStaticSample(webrtc.RTPCodecCapability{MimeType: mimeType, ClockRate: 90000, Channels: 0, SDPFmtpLine: "packetization-mode=1;profile-level-id=42e01f", RTCPFeedback: nil}, "video", "pion2")
+	videoTrack, err := webrtc.NewTrackLocalStaticSample(webrtc.RTPCodecCapability{MimeType: mimeType, ClockRate: 90000, Channels: 0, SDPFmtpLine: "packetization-mode=1;profile-level-id=42e01f", RTCPFeedback: nil}, "video11", "pion2")
 	if err != nil {
 		panic(err)
 	}
@@ -97,7 +80,7 @@ func main() {
 		panic(err)
 	}
 
-	audioTrack, err := webrtc.NewTrackLocalStaticSample(webrtc.RTPCodecCapability{MimeType: "audio/opus"}, "audio", "pion1")
+	audioTrack, err := webrtc.NewTrackLocalStaticSample(webrtc.RTPCodecCapability{MimeType: "audio/opus"}, "audio11", "pion2")
 	if err != nil {
 		panic(err)
 	}
@@ -107,7 +90,7 @@ func main() {
 	}
 
 	// client join a session
-	err = c.Join(session, nil)
+	err = c.Join(session, sdk.NewJoinConfig().SetNoSubscribe())
 
 	if err != nil {
 		log.Errorf("join err=%v", err)
@@ -120,3 +103,4 @@ func main() {
 
 	select {}
 }
+

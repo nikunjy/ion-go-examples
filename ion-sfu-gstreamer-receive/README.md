@@ -14,7 +14,7 @@ This example requires you have GStreamer installed, these are the supported plat
 ### Download ion-sfu-gstreamer-receive
 ```
 export GO111MODULE=on
-go get github.com/pion/ion-sdk-go/example/ion-sfu-gstreamer-receive
+go get github.com/nikunjy/ion-sdk/example/ion-sfu-gstreamer-receive
 ```
 
 ### Run ion-sfu-gstreamer-receive
