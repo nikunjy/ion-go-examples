@@ -1,1 +1,2 @@
 ion-sfu-gstreamer-send -video-src "v4l2src device="/dev/video0" !  videoconvert ! videoscale ! video/x-raw,width=1280,height=720,framerate=30/1 ! queue max-size-buffers=0 max-size-bytes=0 " -audio-src "autoaudiosrc" --addr "<>" --session "test room"
+ion-sfu-gstreamer-send -video-src v4l2src device=/dev/video0 ! videoconvert ! videoscale -audio-src autoaudiosrc --addr <> --session test room --codec h264
